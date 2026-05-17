@@ -44,13 +44,20 @@ jobs:
           ?>
           EOF
 
-      - name: 🚀 Upload Archive via FTP (High-Speed)
+      - name: 🚀 Prepare files for upload
         run: |
-          echo "Uploading unzip.php..."
-          curl --ftp-skip-pasv-ip -T unzip.php "ftp://${{ secrets.FTP_SERVER }}/domains/nimazomorrodi.com/public_html/unzip.php" --user "${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}"
-          echo "Uploading site.zip..."
-          curl --ftp-skip-pasv-ip -T site.zip "ftp://${{ secrets.FTP_SERVER }}/domains/nimazomorrodi.com/public_html/site.zip" --user "${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}"
-          echo "Upload finished!"
+          mkdir ftp_upload_temp
+          mv site.zip ftp_upload_temp/
+          mv unzip.php ftp_upload_temp/
+
+      - name: 🚀 Upload Archive via FTP (High-Speed)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: /domains/nimazomorrodi.com/public_html/
+          local-dir: ./ftp_upload_temp/
 
       - name: ⚡ Trigger Unzip Extraction on Server
         run: |
