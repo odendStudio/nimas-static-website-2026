@@ -45,25 +45,14 @@ jobs:
           EOF
 
       - name: 🚀 Upload Archive via FTP (High-Speed)
-        shell: python
         run: |
-          import ftplib
-          import os
-          
-          ftp = ftplib.FTP()
-          ftp.connect("${{ secrets.FTP_SERVER }}", 21)
-          ftp.login("${{ secrets.FTP_USERNAME }}", "${{ secrets.FTP_PASSWORD }}")
-          ftp.cwd("/domains/nimazomorrodi.com/public_html")
-          
-          for filename in ["site.zip", "unzip.php"]:
-              if os.path.exists(filename):
-                  print(f"Uploading {filename}...")
-                  with open(filename, "rb") as f:
-                      ftp.storbinary(f"STOR {filename}", f)
-          ftp.quit()
-          print("Upload finished!")
+          echo "Uploading unzip.php..."
+          curl --ftp-skip-pasv-ip -T unzip.php "ftp://${{ secrets.FTP_SERVER }}/domains/nimazomorrodi.com/public_html/unzip.php" --user "${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}"
+          echo "Uploading site.zip..."
+          curl --ftp-skip-pasv-ip -T site.zip "ftp://${{ secrets.FTP_SERVER }}/domains/nimazomorrodi.com/public_html/site.zip" --user "${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}"
+          echo "Upload finished!"
 
       - name: ⚡ Trigger Unzip Extraction on Server
         run: |
           echo "Triggering extraction via HTTP..."
-          curl -s https://nimazomorrodi.com/unzip.php
+          curl --max-time 120 https://nimazomorrodi.com/unzip.php
