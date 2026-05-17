@@ -51,9 +51,13 @@ jobs:
           mv unzip.php ftp_upload_temp/
 
       - name: 🚀 Upload Archive via lftp (High-Speed)
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
         run: |
           sudo apt-get update && sudo apt-get install -y lftp
-          lftp -c "set ftp:list-options -a; set ftp:passive-mode true; set ftp:prefer-epsv false; open -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' ftp://${{ secrets.FTP_SERVER }}; put -O /domains/nimazomorrodi.com/public_html ftp_upload_temp/unzip.php; put -O /domains/nimazomorrodi.com/public_html ftp_upload_temp/site.zip"
+          lftp -e "set ssl:verify-certificate no; set ftp:passive-mode true; set ftp:prefer-epsv false; put -O /domains/nimazomorrodi.com/public_html ftp_upload_temp/unzip.php; put -O /domains/nimazomorrodi.com/public_html ftp_upload_temp/site.zip; quit" -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER"
 
       - name: ⚡ Trigger Unzip Extraction on Server
         run: |
