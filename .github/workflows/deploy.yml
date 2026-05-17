@@ -14,6 +14,10 @@ jobs:
       - name: 🚚 Get latest code
         uses: actions/checkout@v4
 
+      - name: 📈 Inject Google Analytics
+        run: |
+          python .github/workflows/inject_analytics.py
+
       - name: 📦 Archive site files
         run: |
           zip -r site.zip . -x "*.git*" ".github/*" "dynamic_features.md" ".gitignore"
