@@ -141,4 +141,55 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+// Register Alpine Mobile Menu component for the entire static theme
+document.addEventListener('alpine:init', () => {
+    Alpine.data('menuComponent', () => ({
+        open: false,
+        toggle() {
+            this.open = !this.open;
+            document.body.style.overflow = this.open ? 'hidden' : '';
+            if (this.open) { this._openMenu(); } else { this._closeMenu(); }
+        },
+        close() {
+            this.open = false;
+            document.body.style.overflow = '';
+            this._closeMenu();
+        },
+        _openMenu() {
+            var o = document.getElementById('nz-menu-overlay');
+            document.querySelectorAll('.nz-menu-list li a, .nz-fade-y').forEach(function(el) {
+                el.className = el.className.replace(/nz-item-in|nz-item-out/g,'').trim();
+                el.style.animationDelay = '0s';
+            });
+            o.style.display = 'flex';
+            o.style.pointerEvents = 'none';
+            o.offsetHeight; // reflow
+            o.classList.add('nz-overlay-open');
+            setTimeout(function() {
+                o.style.pointerEvents = 'auto';
+                document.querySelectorAll('.nz-menu-list li a, .nz-fade-y').forEach(function(el, i) {
+                    el.style.animationDelay = (0.05 + i * 0.07) + 's';
+                    el.offsetHeight;
+                    el.classList.add('nz-item-in');
+                });
+            }, 450);
+        },
+        _closeMenu() {
+            var o = document.getElementById('nz-menu-overlay');
+            o.style.pointerEvents = 'none';
+            var items = document.querySelectorAll('.nz-menu-list li a, .nz-fade-y');
+            var total = items.length;
+            items.forEach(function(el, i) {
+                el.className = el.className.replace(/nz-item-in|nz-item-out/g,'').trim();
+                el.style.animationDelay = ((total - 1 - i) * 0.05) + 's';
+                el.offsetHeight;
+                el.classList.add('nz-item-out');
+            });
+            setTimeout(function() { o.classList.remove('nz-overlay-open'); }, 300);
+            setTimeout(function() { o.style.display = 'none'; }, 600);
+        }
+    }));
+});
+
+
 
