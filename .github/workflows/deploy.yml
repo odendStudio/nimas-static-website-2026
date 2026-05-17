@@ -1,4 +1,4 @@
-name: Deploy Static Website to Production
+name: Deploy Static Website to Production (High-Speed)
 
 on:
   push:
@@ -8,24 +8,58 @@ on:
 
 jobs:
   deploy:
-    name: Deploy via FTP
+    name: Deploy via Zip & Extract
     runs-on: ubuntu-latest
     steps:
       - name: 🚚 Get latest code
         uses: actions/checkout@v4
 
-      - name: 📂 Sync files to server
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          port: 21
-          local-dir: ./
-          server-dir: ./
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            .gitignore
-            dynamic_features.md
+      - name: 📦 Archive site files
+        run: |
+          zip -r site.zip . -x "*.git*" ".github/*" "dynamic_features.md" ".gitignore"
+
+      - name: 📝 Create unzip trigger script
+        run: |
+          cat << 'EOF' > unzip.php
+          <?php
+          @set_time_limit(300);
+          $zip_file = __DIR__ . '/site.zip';
+          if (!file_exists($zip_file)) {
+              die("Error: site.zip not found.");
+          }
+          $zip = new ZipArchive;
+          if ($zip->open($zip_file) === TRUE) {
+              $zip->extractTo(__DIR__);
+              $zip->close();
+              @unlink($zip_file);
+              @unlink(__FILE__);
+              echo "SUCCESS: Extracted all files and cleaned up.";
+          } else {
+              echo "Error: Could not open site.zip.";
+          }
+          ?>
+          EOF
+
+      - name: 🚀 Upload Archive via FTP (High-Speed)
+        shell: python
+        run: |
+          import ftplib
+          import os
+          
+          ftp = ftplib.FTP()
+          ftp.connect("${{ secrets.FTP_SERVER }}", 21)
+          ftp.login("${{ secrets.FTP_USERNAME }}", "${{ secrets.FTP_PASSWORD }}")
+          ftp.cwd("/domains/nimazomorrodi.com/public_html")
+          
+          for filename in ["site.zip", "unzip.php"]:
+              if os.path.exists(filename):
+                  print(f"Uploading {filename}...")
+                  with open(filename, "rb") as f:
+                      ftp.storbinary(f"STOR {filename}", f)
+          ftp.quit()
+          print("Upload finished!")
+
+      - name: ⚡ Trigger Unzip Extraction on Server
+        run: |
+          echo "Triggering extraction via HTTP..."
+          curl -s https://nimazomorrodi.com/unzip.php
