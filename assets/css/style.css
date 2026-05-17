@@ -583,7 +583,7 @@ body {
    ========================================================================== */
 #hero-section {
     height: auto !important;
-    min-height: 100dvh;
+    min-height: 100svh;
     min-height: 100vh;
     padding-top: 5.5rem !important;
     padding-bottom: 5rem !important;
@@ -643,7 +643,7 @@ body {
         padding-top: 4.5rem !important;
         padding-bottom: 3.5rem !important;
         height: auto !important;
-        min-height: 100dvh;
+        min-height: 100svh;
         overflow-y: auto !important;
     }
 
@@ -707,7 +707,7 @@ body {
    ========================================================================== */
 @media (min-width: 1024px) and (min-height: 541px) {
     #hero-section {
-        height: 100dvh !important;
+        height: 100svh !important;
         padding-top: 6.5rem !important;
         padding-bottom: 3.5rem !important;
         overflow: hidden !important;
