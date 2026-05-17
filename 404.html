@@ -67,37 +67,43 @@
     </a>
   </div>
 
-  <main class="flex-grow w-full flex flex-col items-center justify-center relative overflow-hidden bg-white text-center px-5 py-32" id="main-content">
+  <main class="flex-grow w-full flex flex-col items-center justify-center relative overflow-hidden bg-white text-center px-5 py-32 min-h-screen" id="main-content">
     
+    <!-- Animated Blobs Background -->
     <div class="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none">
       <div class="absolute -top-[10%] -left-[10%] w-[90%] md:w-[60%] h-[60%] md:h-[60%] nz-parallax-blob">
-        <div class="w-full h-full bg-[#67E8F9] rounded-full mix-blend-multiply filter blur-[60px] md:blur-[100px] opacity-60 animate-mesh-1"></div>
+        <div class="w-full h-full bg-[#67E8F9] rounded-full mix-blend-multiply filter blur-[80px] md:blur-[120px] opacity-40 animate-mesh-1"></div>
       </div>
       <div class="absolute top-[20%] -right-[20%] w-[90%] md:w-[60%] h-[60%] md:h-[60%] nz-parallax-blob">
-        <div class="w-full h-full bg-[#F9A8D4] rounded-full mix-blend-multiply filter blur-[60px] md:blur-[100px] opacity-60 animate-mesh-2"></div>
+        <div class="w-full h-full bg-[#F9A8D4] rounded-full mix-blend-multiply filter blur-[80px] md:blur-[120px] opacity-40 animate-mesh-2"></div>
       </div>
       <div class="absolute -bottom-[20%] left-[10%] w-[90%] md:w-[60%] h-[60%] md:h-[60%] nz-parallax-blob">
-        <div class="w-full h-full bg-[#60A5FA] rounded-full mix-blend-multiply filter blur-[60px] md:blur-[100px] opacity-60 animate-mesh-3"></div>
+        <div class="w-full h-full bg-[#FACF3F] rounded-full mix-blend-multiply filter blur-[80px] md:blur-[120px] opacity-30 animate-mesh-3"></div>
       </div>
     </div>
     
-    <div class="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
-      <h1 class="text-[12rem] sm:text-[16rem] md:text-[22rem] font-bold font-unna leading-none text-black tracking-tighter mb-0 js-fade-up mix-blend-overlay opacity-90">
+    <!-- Massive Background Watermark -->
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden">
+      <h1 class="text-[16rem] sm:text-[24rem] md:text-[34rem] font-bold font-unna leading-none text-black opacity-[0.03] tracking-tighter select-none">
         404
       </h1>
-      <h2 class="text-3xl md:text-5xl font-bold font-unna text-gray-900 tracking-tight mb-6 js-fade-up" style="transition-delay: 0.1s;">
-        Looks like you're lost.
+    </div>
+    
+    <!-- Foreground Typography & CTA -->
+    <div class="relative z-10 max-w-2xl mx-auto flex flex-col items-center mt-8">
+      <h2 class="text-4xl md:text-6xl font-bold font-unna text-gray-900 tracking-tight mb-5 js-fade-up">
+        You've wandered off.
       </h2>
-      <p class="text-base md:text-xl font-montserrat text-gray-600 mb-10 max-w-lg mx-auto js-fade-up" style="transition-delay: 0.2s;">
-        The page you are looking for doesn't exist, has been moved, or is temporarily unavailable. Let's get you back on track.
+      <p class="text-lg md:text-xl font-montserrat text-gray-500 mb-10 max-w-md mx-auto leading-relaxed js-fade-up" style="transition-delay: 0.1s;">
+        The page you're looking for doesn't exist or has been moved. Let's guide you back to the portfolio.
       </p>
       
-      <div class="js-fade-up" style="transition-delay: 0.3s;">
-        <a href="/" class="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white bg-black rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl active:scale-95">
-          <span class="absolute inset-0 w-full h-full bg-gradient-to-br from-[#FACF3F] via-orange-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out"></span>
-          <span class="relative flex items-center gap-2">
-            <i class="fa-solid fa-arrow-left transition-transform duration-300 group-hover:-translate-x-1"></i>
-            Return to Homepage
+      <div class="js-fade-up" style="transition-delay: 0.2s;">
+        <a href="/" class="group relative inline-flex items-center justify-center px-8 py-4 font-montserrat font-medium tracking-wide text-white bg-black rounded-full overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl active:scale-95">
+          <span class="absolute inset-0 w-full h-full bg-[#1F1F1F] opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></span>
+          <span class="relative flex items-center gap-3">
+            <i class="fa-solid fa-arrow-left text-sm transition-transform duration-500 group-hover:-translate-x-1"></i>
+            Back to Homepage
           </span>
         </a>
       </div>
