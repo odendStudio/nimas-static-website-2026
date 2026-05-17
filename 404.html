@@ -61,16 +61,9 @@
   </div>
 
   <!-- Header Nav -->
-  <div class="absolute top-8 md:top-[clamp(2rem,calc(0.5vw_+_1.5rem),3rem)] flex justify-center md:justify-between items-center w-full max-w-[72rem] mx-auto px-5 sm:px-8 md:px-[clamp(2rem,calc(0.8vw_+_1.86rem),4.5rem)] z-[100]">
-    <a class="h-10 flex items-center" href="/">
-      <img alt="Nima Zomorrodi Logo" class="h-10 w-auto" src="/assets/media/homepage/nima-logo.svg" />
-    </a>
-    <a class="hidden md:inline-flex group items-center gap-2 relative cursor-pointer py-2" href="/say-hi/">
-      <span class="text-black font-medium text-lg">Say</span>
-      <span class="inline-flex items-center bg-black text-white px-4 py-1.5 rounded-full shadow-md transition-all duration-300 group-hover:px-6">
-        <span class="font-bold">Hi</span>
-        <span class="inline-block overflow-hidden transition-all duration-300 nz-wave-emoji">👋</span>
-      </span>
+  <div class="absolute top-8 md:top-[clamp(2rem,calc(0.5vw_+_1.5rem),3rem)] flex justify-center items-center w-full z-[100]">
+    <a class="h-12 md:h-16 flex items-center" href="/">
+      <img alt="Nima Zomorrodi Logo" class="h-12 md:h-16 w-auto" src="/assets/media/homepage/nima-logo.svg" />
     </a>
   </div>
 
@@ -89,7 +82,7 @@
     </div>
     
     <div class="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
-      <h1 class="text-[8rem] md:text-[14rem] font-bold font-unna leading-none text-black tracking-tighter mb-0 js-fade-up">
+      <h1 class="text-[12rem] sm:text-[16rem] md:text-[22rem] font-bold font-unna leading-none text-black tracking-tighter mb-0 js-fade-up mix-blend-overlay opacity-90">
         404
       </h1>
       <h2 class="text-3xl md:text-5xl font-bold font-unna text-gray-900 tracking-tight mb-6 js-fade-up" style="transition-delay: 0.1s;">
@@ -111,29 +104,7 @@
     </div>
   </main>
   
-  <footer class="bg-black text-white px-4 py-10 w-full mt-auto relative z-20">
-    <div class="container mx-auto text-center">
-      <a href="/">
-        <img alt="Nima Zomorrodi" class="mx-auto w-8 h-auto" src="/assets/media/shared/logo-white.svg" />
-      </a>
-      <div class="mt-6 mb-4">
-        <ul class="flex justify-center flex-wrap gap-4 text-sm md:text-base">
-          <li><a href="/biography/">Biography</a></li>
-          <li><a href="/expertise/">Expertise</a></li>
-          <li><a href="/resume/">Resume</a></li>
-          <li><a href="/portfolio/">Portfolio</a></li>
-          <li><a href="/blog/">UX Blog</a></li>
-          <li><a href="/contact/">Contact</a></li>
-        </ul>
-      </div>
-      <p class="text-sm md:text-base">
-        E-mail: <a class="text-gray-400 hover:text-white transition" href="mailto:me@nimazomorrodi.com">me [at] nimazomorrodi.com</a>
-      </p>
-      <p class="text-sm mt-4 text-gray-400">
-        © 2026 Nima Zomorrodi All Rights Reserved
-      </p>
-    </div>
-  </footer>
+  <!-- No Footer for a clean 404 page -->
 
   <script defer="" id="gsap-js" src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" type="text/javascript"></script>
   <script defer="" id="gsap-scrolltrigger-js" src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" type="text/javascript"></script>
