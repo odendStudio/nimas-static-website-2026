@@ -50,14 +50,10 @@ jobs:
           mv site.zip ftp_upload_temp/
           mv unzip.php ftp_upload_temp/
 
-      - name: 🚀 Upload Archive via FTP (High-Speed)
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /domains/nimazomorrodi.com/public_html/
-          local-dir: ./ftp_upload_temp/
+      - name: 🚀 Upload Archive via lftp (High-Speed)
+        run: |
+          sudo apt-get update && sudo apt-get install -y lftp
+          lftp -c "set ftp:list-options -a; set ftp:passive-mode true; set ftp:prefer-epsv false; open -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' ftp://${{ secrets.FTP_SERVER }}; put -O /domains/nimazomorrodi.com/public_html ftp_upload_temp/unzip.php; put -O /domains/nimazomorrodi.com/public_html ftp_upload_temp/site.zip"
 
       - name: ⚡ Trigger Unzip Extraction on Server
         run: |
