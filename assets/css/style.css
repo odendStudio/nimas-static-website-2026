@@ -1,0 +1,226 @@
+/*
+Theme Name: Nima Zomorrodi 2026
+Theme URI: https://nimazomorrodi.com
+Author: Nima Zomorrodi
+Author URI: https://nimazomorrodi.com
+Description: A modern, Tailwind-based UX/UI portfolio theme with dynamic interactions.
+Version: 1.2.0
+Text Domain: nimazomorrodi
+*/
+
+/* ==========================================================================
+   Front Page Animations
+   ========================================================================== */
+
+/* Complex Mesh Gradient Animation */
+.hero-reveal-1,
+.hero-reveal-2,
+.hero-reveal-3 {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: heroReveal 1.2s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+.hero-reveal-1 {
+    animation-delay: 0.1s;
+}
+
+.hero-reveal-2 {
+    animation-delay: 0.25s;
+}
+
+.hero-reveal-3 {
+    animation-delay: 0.4s;
+}
+
+@keyframes heroReveal {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes mesh-1 {
+
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+    }
+
+    50% {
+        transform: translateY(-20%) scale(1.1);
+    }
+}
+
+@keyframes mesh-2 {
+
+    0%,
+    100% {
+        transform: translateX(0) scale(1);
+    }
+
+    50% {
+        transform: translateX(-20%) scale(0.9);
+    }
+}
+
+@keyframes mesh-3 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+        transform: translate(10%, 10%) scale(1.2);
+    }
+
+    66% {
+        transform: translate(-5%, -5%) scale(0.8);
+    }
+}
+
+@keyframes mesh-4 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    50% {
+        transform: translate(-10%, 15%) rotate(10deg);
+    }
+}
+
+@keyframes mesh-pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+
+    50% {
+        transform: scale(1.4);
+        opacity: 0.4;
+    }
+}
+
+.animate-mesh-1,
+.animate-mesh-2,
+.animate-mesh-3,
+.animate-mesh-4,
+.animate-mesh-pulse {
+    will-change: transform, opacity;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+}
+
+.animate-mesh-1 {
+    animation: mesh-1 12s ease-in-out infinite;
+}
+
+.animate-mesh-2 {
+    animation: mesh-2 15s ease-in-out infinite alternate;
+}
+
+.animate-mesh-3 {
+    animation: mesh-3 18s ease-in-out infinite;
+}
+
+.animate-mesh-4 {
+    animation: mesh-4 20s ease-in-out infinite alternate;
+}
+
+.animate-mesh-pulse {
+    animation: mesh-pulse 10s ease-in-out infinite;
+}
+
+/* Call Me Wobble Animation */
+@keyframes call-wobble {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    15% {
+        transform: rotate(-15deg);
+    }
+
+    30% {
+        transform: rotate(10deg);
+    }
+
+    45% {
+        transform: rotate(-15deg);
+    }
+
+    60% {
+        transform: rotate(10deg);
+    }
+
+    75% {
+        transform: rotate(-10deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+.group:hover .hand-wave {
+    animation: call-wobble 1.5s ease-in-out infinite;
+    transform-origin: bottom center;
+}
+
+/* Hide Complianz Manage Consent Button */
+#cmplz-manage-consent,
+.cmplz-manage-consent {
+    display: none !important;
+}
+
+/* ==========================================================================
+   Custom Premium Slim Scrollbar
+   ========================================================================== */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.35);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+/* For dark context (prefers dark/sections) */
+@media (prefers-color-scheme: dark) {
+    ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.03);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.25);
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.4);
+    }
+}
