@@ -1045,3 +1045,7 @@ body {
 .nz-404-desc {
     margin-bottom: 4.5rem;
 }
+
+.nz-404-btn i {
+    margin-right: 0.75rem;
+}
