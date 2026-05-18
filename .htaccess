@@ -1,0 +1,5 @@
+# Serve Custom 404 Error Page
+ErrorDocument 404 /404.html
+
+# Prevent Directory Browsing
+Options -Indexes
