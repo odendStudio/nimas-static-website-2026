@@ -4,7 +4,7 @@ Theme URI: https://nimazomorrodi.com
 Author: Nima Zomorrodi
 Author URI: https://nimazomorrodi.com
 Description: A modern, Tailwind-based UX/UI portfolio theme with dynamic interactions.
-Version: 1.5.11
+Version: 1.5.12
 Text Domain: nimazomorrodi
 */
 
@@ -212,7 +212,8 @@ body {
 /* Complex Mesh Gradient Animation */
 .hero-reveal-1,
 .hero-reveal-2,
-.hero-reveal-3 {
+.hero-reveal-3,
+.hero-reveal-4 {
     opacity: 0;
     transform: translateY(30px);
     animation: heroReveal 1.2s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
@@ -228,6 +229,10 @@ body {
 
 .hero-reveal-3 {
     animation-delay: 0.4s;
+}
+
+.hero-reveal-4 {
+    animation-delay: 0.55s;
 }
 
 @keyframes heroReveal {
