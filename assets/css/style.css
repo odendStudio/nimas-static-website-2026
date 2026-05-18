@@ -1035,3 +1035,7 @@ body {
     --wpforms-button-size-padding-h: 15px;
     --wpforms-button-size-margin-top: 10px;
 }
+
+.nz-404-title {
+    font-size: clamp(10rem, 30vw, 22rem);
+}
