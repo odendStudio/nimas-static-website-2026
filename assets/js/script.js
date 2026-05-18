@@ -98,8 +98,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
         }, {
-            // Trigger 1500px before reaching viewport for smoother experience on fast scroll
-            rootMargin: "1500px 0px 1500px 0px"
+            // Trigger 300px before reaching viewport for optimal CPU/GPU performance (prevents playing all videos simultaneously)
+            rootMargin: "300px 0px 300px 0px"
         });
 
         document.querySelectorAll('video.js-lazy-video').forEach(video => {

@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
     // 1. Initialize Lenis for Smooth Scroll
+    let lenis;
     if (typeof Lenis !== 'undefined') {
-        const lenis = new Lenis({
+        lenis = new Lenis({
             autoLenis: true,
             smoothWheel: true,
             lerp: 0.12, // Tighter smoothness
@@ -76,9 +77,27 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        // 2.4 Scroll Indicator Fade Out
+        // 2.4 Scroll Indicator Fade Out & Smooth Scroll Click
         const scrollIndicator = document.getElementById("nz-scroll-indicator");
         if (scrollIndicator) {
+            // Click handler for smooth scrolling using Lenis if available
+            scrollIndicator.addEventListener("click", (e) => {
+                e.preventDefault();
+                const targetId = scrollIndicator.getAttribute("href");
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    if (lenis) {
+                        lenis.scrollTo(targetElement, {
+                            duration: 1.8,
+                            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // premium easeOutExpo
+                            offset: 0
+                        });
+                    } else {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            });
+
             gsap.to(scrollIndicator, {
                 opacity: 0,
                 y: 20,
@@ -215,6 +234,18 @@ document.addEventListener("DOMContentLoaded", () => {
             // Rotation state (controlled by scroll scrub)
             const rotationState = { rx: 0.3, ry: 0.5, rz: 0.1 };
 
+            // Debounce canvas draw with requestAnimationFrame to ensure high-performance, stutter-free scrolling
+            let drawRequested = false;
+            const requestDrawKnot = () => {
+                if (!drawRequested) {
+                    drawRequested = true;
+                    requestAnimationFrame(() => {
+                        drawKnot();
+                        drawRequested = false;
+                    });
+                }
+            };
+
             // Link 3D rotation variables directly to scroll
             gsap.to(rotationState, {
                 rx: 3.5,
@@ -226,7 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     start: "top bottom",
                     end: "bottom top",
                     scrub: true,
-                    onUpdate: () => drawKnot()
+                    onUpdate: requestDrawKnot
                 }
             });
 
@@ -363,17 +394,23 @@ document.addEventListener("DOMContentLoaded", () => {
         // 5.1 Media Parallax (inside videos)
         const videos = portfolioSection.querySelectorAll("video");
         videos.forEach(video => {
-            gsap.set(video, { scale: 1.15, transformOrigin: "center center", willChange: "transform" });
-            gsap.to(video, {
-                yPercent: 15,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: video.parentElement,
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: true
+            // Using a scale of 1.2 provides a 10% buffer at the top and bottom.
+            // Animating yPercent from -10% to 10% ensures that the video always
+            // covers the container perfectly, never exposing the background color.
+            gsap.set(video, { scale: 1.2, transformOrigin: "center center", willChange: "transform" });
+            gsap.fromTo(video,
+                { yPercent: -10 },
+                {
+                    yPercent: 10,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: video.parentElement,
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: true
+                    }
                 }
-            });
+            );
         });
 
         // 5.2 Scrub Reveal for portfolio items
@@ -411,7 +448,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 scrollTrigger: {
                     trigger: portfolioSection,
                     start: "bottom bottom",
-                    end: "bottom top",
+                    endTrigger: "footer",
+                    end: "bottom bottom",
                     scrub: true
                 }
             }
@@ -433,33 +471,44 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         );
 
-        // Trigger the ambient wave animation with a 2-second delay after entering viewport
+        // Trigger the ambient wave animation with a 2-second delay after entering viewport (using seamless transitions)
         const waveContainer = ctaSection.querySelector(".nz-cta-wave-container");
         if (waveContainer) {
             let ctaTimeout = null;
+            let ctaInterval = null;
+
+            const startAmbientCycle = () => {
+                stopAmbientCycle(); // Reset any existing active timers
+                // First pop up after a 2-second delay
+                ctaTimeout = setTimeout(() => {
+                    waveContainer.classList.add("nz-ambient-pop");
+                    ctaTimeout = setTimeout(() => {
+                        waveContainer.classList.remove("nz-ambient-pop");
+                    }, 2500);
+
+                    // Then infinitely loop every 12 seconds
+                    ctaInterval = setInterval(() => {
+                        waveContainer.classList.add("nz-ambient-pop");
+                        ctaTimeout = setTimeout(() => {
+                            waveContainer.classList.remove("nz-ambient-pop");
+                        }, 2500);
+                    }, 12000);
+                }, 2000);
+            };
+
+            const stopAmbientCycle = () => {
+                if (ctaTimeout) clearTimeout(ctaTimeout);
+                if (ctaInterval) clearInterval(ctaInterval);
+                waveContainer.classList.remove("nz-ambient-pop");
+            };
+
             ScrollTrigger.create({
                 trigger: ctaSection,
                 start: "top 75%",
-                onEnter: () => {
-                    if (ctaTimeout) clearTimeout(ctaTimeout);
-                    ctaTimeout = setTimeout(() => {
-                        waveContainer.classList.add("nz-animate");
-                    }, 2000);
-                },
-                onLeave: () => {
-                    if (ctaTimeout) clearTimeout(ctaTimeout);
-                    waveContainer.classList.remove("nz-animate");
-                },
-                onEnterBack: () => {
-                    if (ctaTimeout) clearTimeout(ctaTimeout);
-                    ctaTimeout = setTimeout(() => {
-                        waveContainer.classList.add("nz-animate");
-                    }, 2000);
-                },
-                onLeaveBack: () => {
-                    if (ctaTimeout) clearTimeout(ctaTimeout);
-                    waveContainer.classList.remove("nz-animate");
-                }
+                onEnter: startAmbientCycle,
+                onLeave: stopAmbientCycle,
+                onEnterBack: startAmbientCycle,
+                onLeaveBack: stopAmbientCycle
             });
         }
     }
