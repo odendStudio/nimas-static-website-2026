@@ -166,7 +166,7 @@ body {
 }
 
 #nz-scroll-indicator {
-    bottom: 35px !important;
+    bottom: 48px !important;
     top: auto !important;
 }
 
@@ -615,7 +615,7 @@ body {
     opacity: 0.55;
     animation: nz-scroll-gesture 2s ease-in-out infinite;
     will-change: transform;
-    bottom: 25px !important;
+    bottom: 48px !important;
 }
 
 #nz-scroll-indicator:hover {
@@ -796,7 +796,7 @@ body {
     }
 
     #nz-scroll-indicator {
-        bottom: 32px !important;
+        bottom: 56px !important;
     }
 }
 
@@ -822,7 +822,7 @@ body {
     }
 
     #nz-scroll-indicator {
-        bottom: 35px !important;
+        bottom: 60px !important;
     }
 }
 
