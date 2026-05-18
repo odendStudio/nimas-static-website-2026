@@ -4,7 +4,7 @@ Theme URI: https://nimazomorrodi.com
 Author: Nima Zomorrodi
 Author URI: https://nimazomorrodi.com
 Description: A modern, Tailwind-based UX/UI portfolio theme with dynamic interactions.
-Version: 1.5.4
+Version: 1.5.5
 Text Domain: nimazomorrodi
 */
 
@@ -12,7 +12,8 @@ Text Domain: nimazomorrodi
    Base resets, Font overrides and Page layouts (Moved from index.html)
    ========================================================================== */
 body,
-html {
+html,
+.font-montserrat {
     font-family: 'Montserrat', sans-serif !important;
 }
 
