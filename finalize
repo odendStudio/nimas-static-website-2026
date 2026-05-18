@@ -1,0 +1,117 @@
+#!/usr/bin/env python3
+import os
+import re
+import subprocess
+import sys
+
+def main():
+    print("🚀 Starting finalization and deployment workflow...")
+
+    # 1. Determine workspace directory
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    index_path = os.path.join(base_dir, "index.html")
+
+    if not os.path.exists(index_path):
+        print("❌ Error: index.html not found in the script directory.")
+        sys.exit(1)
+
+    # 2. Extract current version from index.html
+    with open(index_path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    # Search for something like style.css?v=1.5.2
+    match = re.search(r'style\.css\?v=(\d+\.\d+\.\d+)', content)
+    if not match:
+        print("❌ Error: Could not find version query parameter (style.css?v=X.Y.Z) in index.html.")
+        sys.exit(1)
+
+    old_version = match.group(1)
+    parts = old_version.split(".")
+    if len(parts) != 3:
+        print(f"❌ Error: Invalid version format: {old_version}")
+        sys.exit(1)
+
+    # Increment patch version (last digit)
+    new_version = f"{parts[0]}.{parts[1]}.{int(parts[2]) + 1}"
+    print(f"📈 Bumping website assets version from v{old_version} to v{new_version}...")
+
+    # 3. Update style.css Version header
+    style_css_path = os.path.join(base_dir, "assets", "css", "style.css")
+    if os.path.exists(style_css_path):
+        with open(style_css_path, "r", encoding="utf-8") as f:
+            style_content = f.read()
+        
+        # Replace Version: X.Y.Z with Version: NEW_VERSION
+        new_style_content = re.sub(r'Version:\s*\d+\.\d+\.\d+', f'Version: {new_version}', style_content)
+        with open(style_css_path, "w", encoding="utf-8") as f:
+            f.write(new_style_content)
+        print(f"📝 Updated version header in assets/css/style.css to {new_version}")
+
+    # 4. Recursively find and update all HTML files
+    html_count = 0
+    version_regex = re.compile(r'(\?v=)\d+\.\d+\.\d+')
+
+    for root, dirs, files in os.walk(base_dir):
+        # Exclude directories like .git and .github
+        dirs[:] = [d for d in dirs if d not in (".git", ".github")]
+        for file in files:
+            if file.endswith(".html"):
+                file_path = os.path.join(root, file)
+                with open(file_path, "r", encoding="utf-8") as f:
+                    file_content = f.read()
+                
+                # Check if file has any ?v=X.Y.Z query parameters
+                if version_regex.search(file_content):
+                    new_file_content = version_regex.sub(rf'\g<1>{new_version}', file_content)
+                    with open(file_path, "w", encoding="utf-8") as f:
+                        f.write(new_file_content)
+                    html_count += 1
+
+    print(f"✅ Updated {html_count} HTML files in total to use ?v={new_version}")
+
+    # 5. Git workflow integration
+    try:
+        # Check git status first
+        status_out = subprocess.check_output(["git", "status", "--porcelain"], text=True)
+        if not status_out.strip():
+            print("⚠️ No changes found to commit.")
+            sys.exit(0)
+
+        # Get current branch
+        branch_name = subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"], text=True).strip()
+        print(f"🌿 Current active Git branch is: {branch_name}")
+
+        # Check if a commit message was passed as an argument
+        default_commit_msg = f"Release v{new_version}: Bump version and finalize changes"
+        if len(sys.argv) > 1:
+            commit_msg = " ".join(sys.argv[1:]).strip()
+            print(f"💬 Using commit message from arguments: '{commit_msg}'")
+        else:
+            print(f"\n💬 Enter commit message [Default: '{default_commit_msg}']:")
+            commit_msg = input().strip()
+            if not commit_msg:
+                commit_msg = default_commit_msg
+
+        # Git add
+        print("Adding files to staging area...")
+        subprocess.check_call(["git", "add", "-A"])
+
+        # Git commit
+        print("Committing changes...")
+        subprocess.check_call(["git", "commit", "-m", commit_msg])
+
+        # Git push
+        print(f"Pushing to origin {branch_name}...")
+        subprocess.check_call(["git", "push", "origin", branch_name])
+
+        print(f"\n🎉 Successfully finalized, committed, and pushed v{new_version} to origin/{branch_name}!")
+
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Git Command failed: {e}")
+        sys.exit(1)
+    except KeyboardInterrupt:
+        print("\n⚠️ Workflow aborted by user.")
+        sys.exit(0)
+
+if __name__ == "__main__":
+    main()

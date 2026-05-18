@@ -513,33 +513,63 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // 7. Say Hi Top Navigation Waving Emoji Trigger (2s delay after visible)
+    // 7. Say Hi Top Navigation Waving Emoji Trigger (2s delay after visible, periodic)
     const sayHiEmoji = document.querySelector(".nz-wave-emoji");
     if (sayHiEmoji) {
+        const sayHiButton = sayHiEmoji.closest("a");
         let sayHiTimeout = null;
+        let sayHiInterval = null;
+        let isHovered = false;
+
+        const startSayHiAmbient = () => {
+            stopSayHiAmbient();
+            if (isHovered) return; // Do not start if currently hovered
+
+            // Initial pop up after 2 seconds
+            sayHiTimeout = setTimeout(() => {
+                if (isHovered) return;
+                sayHiEmoji.classList.add("nz-animate");
+                sayHiTimeout = setTimeout(() => {
+                    sayHiEmoji.classList.remove("nz-animate");
+                }, 2500);
+
+                // Periodic pop up every 15 seconds
+                sayHiInterval = setInterval(() => {
+                    if (isHovered) return;
+                    sayHiEmoji.classList.add("nz-animate");
+                    sayHiTimeout = setTimeout(() => {
+                        sayHiEmoji.classList.remove("nz-animate");
+                    }, 2500);
+                }, 15000);
+            }, 2000);
+        };
+
+        const stopSayHiAmbient = () => {
+            if (sayHiTimeout) clearTimeout(sayHiTimeout);
+            if (sayHiInterval) clearInterval(sayHiInterval);
+            sayHiEmoji.classList.remove("nz-animate");
+        };
+
+        // Add mouseenter/mouseleave listeners to handle instant override when hovered
+        if (sayHiButton) {
+            sayHiButton.addEventListener("mouseenter", () => {
+                isHovered = true;
+                stopSayHiAmbient();
+            });
+
+            sayHiButton.addEventListener("mouseleave", () => {
+                isHovered = false;
+                startSayHiAmbient();
+            });
+        }
+
         ScrollTrigger.create({
             trigger: sayHiEmoji,
-            start: "top bottom", // Trigger once the element is within viewport
-            onEnter: () => {
-                if (sayHiTimeout) clearTimeout(sayHiTimeout);
-                sayHiTimeout = setTimeout(() => {
-                    sayHiEmoji.classList.add("nz-animate");
-                }, 2000);
-            },
-            onLeave: () => {
-                if (sayHiTimeout) clearTimeout(sayHiTimeout);
-                sayHiEmoji.classList.remove("nz-animate");
-            },
-            onEnterBack: () => {
-                if (sayHiTimeout) clearTimeout(sayHiTimeout);
-                sayHiTimeout = setTimeout(() => {
-                    sayHiEmoji.classList.add("nz-animate");
-                }, 2000);
-            },
-            onLeaveBack: () => {
-                if (sayHiTimeout) clearTimeout(sayHiTimeout);
-                sayHiEmoji.classList.remove("nz-animate");
-            }
+            start: "top bottom",
+            onEnter: startSayHiAmbient,
+            onLeave: stopSayHiAmbient,
+            onEnterBack: startSayHiAmbient,
+            onLeaveBack: stopSayHiAmbient
         });
     }
 });

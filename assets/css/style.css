@@ -4,7 +4,7 @@ Theme URI: https://nimazomorrodi.com
 Author: Nima Zomorrodi
 Author URI: https://nimazomorrodi.com
 Description: A modern, Tailwind-based UX/UI portfolio theme with dynamic interactions.
-Version: 1.3.0
+Version: 1.5.3
 Text Domain: nimazomorrodi
 */
 
@@ -369,57 +369,6 @@ body {
 /* ==========================================================================
    Waving Emoji Animations (Say Hi - Top Nav)
    ========================================================================== */
-@keyframes nz-ambient-wave {
-    0% {
-        max-width: 0;
-        margin-left: 0;
-        transform: rotate(0deg);
-    }
-
-    1% {
-        max-width: 1.5rem;
-        margin-left: 0.5rem;
-        transform: rotate(0deg);
-    }
-
-    2% {
-        transform: rotate(14deg);
-    }
-
-    3% {
-        transform: rotate(-8deg);
-    }
-
-    4% {
-        transform: rotate(14deg);
-    }
-
-    5% {
-        transform: rotate(-4deg);
-    }
-
-    6% {
-        transform: rotate(10deg);
-    }
-
-    7% {
-        transform: rotate(0deg);
-    }
-
-    8% {
-        max-width: 1.5rem;
-        margin-left: 0.5rem;
-        transform: rotate(0deg);
-    }
-
-    9%,
-    100% {
-        max-width: 0;
-        margin-left: 0;
-        transform: rotate(0deg);
-    }
-}
-
 .nz-wave-emoji {
     max-width: 0;
     margin-left: 0;
@@ -429,7 +378,9 @@ body {
 }
 
 .nz-wave-emoji.nz-animate {
-    animation: nz-ambient-wave 15s ease-in-out infinite;
+    animation: nz-hover-wave 1.2s ease-in-out infinite;
+    max-width: 1.5rem;
+    margin-left: 0.5rem;
 }
 
 @keyframes nz-hover-wave {
@@ -478,8 +429,9 @@ body {
    ========================================================================== */
 .nz-cta-wave-container {
     opacity: 0;
-    transform: translate(-50%, 15px) scale(0.6);
-    transition: opacity 0.45s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.45s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transform: translate(-50%, 35px) scale(0.35) rotate(-90deg);
+    transform-origin: bottom center;
+    transition: opacity 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     pointer-events: none;
 }
 
@@ -487,7 +439,7 @@ body {
 .nz-cta-wave-container.nz-ambient-pop,
 .group:hover .nz-cta-wave-container {
     opacity: 1;
-    transform: translate(-50%, -8px) scale(1);
+    transform: translate(-50%, -12px) scale(1) rotate(0deg);
     pointer-events: auto;
 }
 
