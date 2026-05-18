@@ -4,7 +4,7 @@ Theme URI: https://nimazomorrodi.com
 Author: Nima Zomorrodi
 Author URI: https://nimazomorrodi.com
 Description: A modern, Tailwind-based UX/UI portfolio theme with dynamic interactions.
-Version: 1.5.9
+Version: 1.5.10
 Text Domain: nimazomorrodi
 */
 
@@ -175,7 +175,7 @@ body {
 }
 
 #uiux h2 {
-    font-size: clamp(2.5rem, 7.5vw, 6.25rem);
+    font-size: clamp(2rem, 5.8vw, 4.85rem);
 }
 
 #uiux h2>span.block {
