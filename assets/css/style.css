@@ -1038,6 +1038,6 @@ body {
 
 .nz-404-title {
     font-size: clamp(10rem, 30vw, 22rem);
-    line-height: 0.8;
-    margin-bottom: -0.22em;
+    line-height: 0.95;
+    margin-bottom: -0.08em;
 }
