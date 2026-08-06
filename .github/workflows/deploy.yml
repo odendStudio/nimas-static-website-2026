@@ -63,3 +63,14 @@ jobs:
         run: |
           echo "Triggering extraction via HTTP..."
           curl --max-time 120 https://nimazomorrodi.com/unzip.php
+
+      - name: 🎬 Upload media videos via FTP
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          lftp -e "set ssl:verify-certificate no; set ftp:passive-mode true; set ftp:prefer-epsv false; \
+            mirror -R assets/media /domains/nimazomorrodi.com/public_html/assets/media \
+              --only-newer --parallel=2 --verbose; quit" \
+            -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER"
