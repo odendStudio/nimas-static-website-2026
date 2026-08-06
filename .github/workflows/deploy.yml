@@ -20,7 +20,7 @@ jobs:
 
       - name: 📦 Archive site files
         run: |
-          zip -r site.zip . -x "*.git*" ".github/*" "dynamic_features.md" ".gitignore"
+          zip -r site.zip . -x "*.git*" ".github/*" "dynamic_features.md" ".gitignore" "assets/media/*"
 
       - name: 📝 Create unzip trigger script
         run: |
