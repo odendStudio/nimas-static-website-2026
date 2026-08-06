@@ -18,53 +18,26 @@ jobs:
         run: |
           python .github/workflows/inject_analytics.py
 
-      - name: 📦 Archive site files
-        run: |
-          zip -r site.zip . -x "*.git*" ".github/*" "dynamic_features.md" ".gitignore" "assets/media/*"
+      - name: 📦 Install lftp
+        run: sudo apt-get update && sudo apt-get install -y lftp
 
-      - name: 📝 Create unzip trigger script
-        run: |
-          cat << 'EOF' > unzip.php
-          <?php
-          @set_time_limit(300);
-          $zip_file = __DIR__ . '/site.zip';
-          if (!file_exists($zip_file)) {
-              die("Error: site.zip not found.");
-          }
-          $zip = new ZipArchive;
-          if ($zip->open($zip_file) === TRUE) {
-              $zip->extractTo(__DIR__);
-              $zip->close();
-              @unlink($zip_file);
-              @unlink(__FILE__);
-              echo "SUCCESS: Extracted all files and cleaned up.";
-          } else {
-              echo "Error: Could not open site.zip.";
-          }
-          ?>
-          EOF
-
-      - name: 🚀 Prepare files for upload
-        run: |
-          mkdir ftp_upload_temp
-          mv site.zip ftp_upload_temp/
-          mv unzip.php ftp_upload_temp/
-
-      - name: 🚀 Upload Archive via lftp (High-Speed)
+      - name: 🚀 Deploy HTML/CSS/JS via lftp mirror
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
         run: |
-          sudo apt-get update && sudo apt-get install -y lftp
-          lftp -e "set ssl:verify-certificate no; set ftp:passive-mode true; set ftp:prefer-epsv false; put -O /domains/nimazomorrodi.com/public_html ftp_upload_temp/unzip.php; put -O /domains/nimazomorrodi.com/public_html ftp_upload_temp/site.zip; quit" -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER"
+          lftp -e "set ssl:verify-certificate no; set ftp:passive-mode true; set ftp:prefer-epsv false; \
+            mirror -R . /domains/nimazomorrodi.com/public_html \
+              --exclude-glob assets/media/ \
+              --exclude-glob .git/ \
+              --exclude-glob .github/ \
+              --exclude dynamic_features.md \
+              --exclude .gitignore \
+              --parallel=4 --verbose; quit" \
+            -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER"
 
-      - name: ⚡ Trigger Unzip Extraction on Server
-        run: |
-          echo "Triggering extraction via HTTP..."
-          curl --max-time 120 https://nimazomorrodi.com/unzip.php
-
-      - name: 🎬 Upload media videos via FTP
+      - name: 🎬 Upload media files via lftp mirror
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
